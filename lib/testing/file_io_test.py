@@ -1,31 +1,29 @@
+# test_file_io.py
+
+import pytest
 from file_io import write_file, append_file, read_file
 
-def test_write_file(tmp_path):
+@pytest.fixture
+def tmp_file(tmp_path):
+    """Fixture to create temporary file path."""
+    return tmp_path / "test_file.txt"
+
+def test_write_file(tmp_file):
     """Test write_file()"""
-    file_name = tmp_path / "test_file"
     file_content = "This is a test content."
-    write_file(file_name, file_content)
-    with open(f'{file_name}.txt', 'r') as f:
-        file_content_read = f.read()
-    assert file_content_read == file_content
+    write_file(tmp_file, file_content)
+    assert read_file(tmp_file) == file_content
 
-def test_append_file(tmp_path):
+def test_append_file(tmp_file):
     """Test append_file()"""
-
-    file_name = tmp_path / "test_file"
     file_content = "This is a test content."
     append_content = "\nAppended content."
-    write_file(file_name, file_content)
-    append_file(file_name, append_content)
-    with open(f'{file_name}.txt', 'r') as f:
-        file_content_read = f.read()
-    assert file_content_read == file_content + append_content
+    write_file(tmp_file, file_content)
+    append_file(tmp_file, append_content)
+    assert read_file(tmp_file) == file_content + append_content
 
-def test_read_file(tmp_path):
+def test_read_file(tmp_file):
     """Test read_file()"""
-
-    file_name = tmp_path / "test_file"
     file_content = "This is a test content."
-    write_file(file_name, file_content)
-    file_content_read = read_file(file_name)
-    assert file_content_read == file_content
+    write_file(tmp_file, file_content)
+    assert read_file(tmp_file) == file_content
